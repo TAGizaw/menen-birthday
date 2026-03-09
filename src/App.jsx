@@ -28,7 +28,7 @@ export default function App() {
     setError(null);
     try {
       const { data, error } = await supabase
-        .from("rsvps")
+        .from("Rsvps")
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -44,7 +44,7 @@ export default function App() {
     setSubmitting(true);
     setError(null);
     try {
-      const { error } = await supabase.from("rsvps").insert([{
+      const { error } = await supabase.from("Rsvps").insert([{
         name: form.name.trim(),
         attending: form.attending,
         guests: form.attending === "yes" ? parseInt(form.guests) : 0,
@@ -72,7 +72,7 @@ export default function App() {
 
   async function removeGuest(id) {
     try {
-      const { error } = await supabase.from("rsvps").delete().eq("id", id);
+      const { error } = await supabase.from("Rsvps").delete().eq("id", id);
       if (error) throw error;
       setGuests(prev => prev.filter(g => g.id !== id));
     } catch (e) {
