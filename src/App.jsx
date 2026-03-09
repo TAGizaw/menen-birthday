@@ -242,7 +242,7 @@ export default function App() {
             <ConfettiDots />
             {!submitted ? (
               <>
-                <div className="form-title">RSVP 💌</div>
+                <div style={{position:"relative",zIndex:2,marginBottom:6,display:"flex",flexDirection:"column",alignItems:"center"}}><div style={{width:64,height:64,borderRadius:"50%",background:"linear-gradient(135deg,#ffb3d9,#c06bff)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.8rem",marginBottom:12,boxShadow:"0 8px 24px rgba(192,107,255,0.3)"}}>✉</div><div className="form-title">RSVP</div></div>
                 <div className="form-sub">Let us know if you can make it!</div>
                 {error && <div className="error-msg">⚠️ {error}</div>}
                 <div className="form-group">
