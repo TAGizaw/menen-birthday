@@ -293,74 +293,86 @@ export default function App() {
           <div className="card">
             <ConfettiDots />
             <div className="guestlist-title">Guest List 🎊</div>
-            <div className="stats-row">
-              <div className="stat-card"><div className="stat-num green">{attending.length}</div><div className="stat-label">Attending</div></div>
-              <div className="stat-card"><div className="stat-num purple">{totalPeople}</div><div className="stat-label">Total People</div></div>
-              <div className="stat-card"><div className="stat-num red">{notAttending.length}</div><div className="stat-label">Can't Make It</div></div>
-            </div>
-
-            {error && <div className="error-msg">⚠️ {error}</div>}
-
-            {loading ? (
-              <div className="empty-state"><div>⏳</div>Loading guests...</div>
-            ) : guests.length===0 ? (
-              <div className="empty-state"><div>📭</div>No RSVPs yet! Share the invitation to get started.</div>
-            ) : (
-              <>
-                {attending.length>0 && (
-                  <>
-                    <div className="section-label">✅ Attending ({attending.length})</div>
-                    <div className="guests-scroll" style={{maxHeight: notAttending.length>0?220:380}}>
-                      {attending.map(g=>(
-                        <div key={g.id} className="guest-item">
-                          <div className="guest-avatar yes">🎉</div>
-                          <div style={{flex:1}}>
-                            <div className="guest-name">{g.name}</div>
-                            <div className="guest-meta">👥 {g.guests} guest{g.guests!==1?"s":""}</div>
-                            {g.note && <div className="guest-note">"{g.note}"</div>}
-                            <div className="guest-time">{new Date(g.created_at).toLocaleString()}</div>
-                          </div>
-                          {adminMode && <button className="remove-btn" onClick={()=>removeGuest(g.id)}>✕</button>}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-                {notAttending.length>0 && (
-                  <>
-                    <div className="section-label" style={{marginTop:14}}>❌ Can't Make It ({notAttending.length})</div>
-                    <div className="guests-scroll" style={{maxHeight:200}}>
-                      {notAttending.map(g=>(
-                        <div key={g.id} className="guest-item">
-                          <div className="guest-avatar no">💝</div>
-                          <div style={{flex:1}}>
-                            <div className="guest-name">{g.name}</div>
-                            {g.note && <div className="guest-note">"{g.note}"</div>}
-                            <div className="guest-time">{new Date(g.created_at).toLocaleString()}</div>
-                          </div>
-                          {adminMode && <button className="remove-btn" onClick={()=>removeGuest(g.id)}>✕</button>}
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </>
-            )}
-
-            <button className="refresh-btn" onClick={fetchGuests}>↻ Refresh list</button>
 
             {!adminMode ? (
-              <div className="admin-section">
-                <div className="admin-row">
-                  <input className="admin-input" type="password" placeholder="Admin code to manage list..." value={adminCode} onChange={e=>setAdminCode(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAdminLogin()} />
-                  <button className="admin-btn" onClick={handleAdminLogin}>Unlock</button>
+              /* ── LOCKED STATE ── */
+              <>
+                <div style={{position:"relative",zIndex:2,textAlign:"center",padding:"30px 0 10px"}}>
+                  <div style={{fontSize:"3.5rem",marginBottom:12}}>🔒</div>
+                  <div style={{fontWeight:800,fontSize:"1.05rem",color:"#3d3d5c",marginBottom:6}}>Admin Access Only</div>
+                  <div style={{fontSize:"0.85rem",color:"#b0b0c0",fontWeight:600,marginBottom:24,lineHeight:1.5}}>
+                    The guest list is private.<br/>Enter the admin code to view it.
+                  </div>
                 </div>
-                {adminError && <div className="admin-error">❌ Incorrect code. Try again!</div>}
-              </div>
+                <div className="admin-section" style={{marginTop:0}}>
+                  <div className="admin-row">
+                    <input className="admin-input" type="password" placeholder="Enter admin code..." value={adminCode} onChange={e=>setAdminCode(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAdminLogin()} />
+                    <button className="admin-btn" onClick={handleAdminLogin}>Unlock</button>
+                  </div>
+                  {adminError && <div className="admin-error">❌ Incorrect code. Try again!</div>}
+                </div>
+              </>
             ) : (
-              <div style={{position:"relative",zIndex:2,marginTop:10,fontSize:"0.78rem",color:"#4caf7d",fontWeight:700}}>
-                🔓 Admin mode — tap ✕ on any guest to remove them
-              </div>
+              /* ── UNLOCKED STATE ── */
+              <>
+                <div className="stats-row">
+                  <div className="stat-card"><div className="stat-num green">{attending.length}</div><div className="stat-label">Attending</div></div>
+                  <div className="stat-card"><div className="stat-num purple">{totalPeople}</div><div className="stat-label">Total People</div></div>
+                  <div className="stat-card"><div className="stat-num red">{notAttending.length}</div><div className="stat-label">Can't Make It</div></div>
+                </div>
+
+                {error && <div className="error-msg">⚠️ {error}</div>}
+
+                {loading ? (
+                  <div className="empty-state"><div>⏳</div>Loading guests...</div>
+                ) : guests.length===0 ? (
+                  <div className="empty-state"><div>📭</div>No RSVPs yet! Share the invitation to get started.</div>
+                ) : (
+                  <>
+                    {attending.length>0 && (
+                      <>
+                        <div className="section-label">✅ Attending ({attending.length})</div>
+                        <div className="guests-scroll" style={{maxHeight: notAttending.length>0?220:380}}>
+                          {attending.map(g=>(
+                            <div key={g.id} className="guest-item">
+                              <div className="guest-avatar yes">🎉</div>
+                              <div style={{flex:1}}>
+                                <div className="guest-name">{g.name}</div>
+                                <div className="guest-meta">👥 {g.guests} guest{g.guests!==1?"s":""}</div>
+                                {g.note && <div className="guest-note">"{g.note}"</div>}
+                                <div className="guest-time">{new Date(g.created_at).toLocaleString()}</div>
+                              </div>
+                              <button className="remove-btn" onClick={()=>removeGuest(g.id)}>✕</button>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    {notAttending.length>0 && (
+                      <>
+                        <div className="section-label" style={{marginTop:14}}>❌ Can't Make It ({notAttending.length})</div>
+                        <div className="guests-scroll" style={{maxHeight:200}}>
+                          {notAttending.map(g=>(
+                            <div key={g.id} className="guest-item">
+                              <div className="guest-avatar no">💝</div>
+                              <div style={{flex:1}}>
+                                <div className="guest-name">{g.name}</div>
+                                {g.note && <div className="guest-note">"{g.note}"</div>}
+                                <div className="guest-time">{new Date(g.created_at).toLocaleString()}</div>
+                              </div>
+                              <button className="remove-btn" onClick={()=>removeGuest(g.id)}>✕</button>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+                <button className="refresh-btn" onClick={fetchGuests}>↻ Refresh list</button>
+                <div style={{position:"relative",zIndex:2,marginTop:10,fontSize:"0.78rem",color:"#4caf7d",fontWeight:700}}>
+                  🔓 Admin mode — tap ✕ on any guest to remove them
+                </div>
+              </>
             )}
             <div className="bottom-hearts">♥ ♥ ♥</div>
           </div>
